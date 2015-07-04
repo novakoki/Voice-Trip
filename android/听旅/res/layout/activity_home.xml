@@ -1,0 +1,139 @@
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <FrameLayout
+        android:id="@+id/frame_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/frameLayout1"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="#ffffff" >
+
+        <WebView
+            android:id="@+id/webView1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="150dp"
+            android:text="" />
+
+        <ProgressBar
+            android:id="@+id/progressBar1"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/frameLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+         >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="1dp"
+            android:gravity="center_horizontal" >
+
+            <FrameLayout
+                android:id="@+id/layout_friendfeed"
+                android:layout_width="fill_parent"
+                android:layout_height="48dp"
+                android:layout_weight="1" 
+                >
+
+                <ImageView
+                    android:id="@+id/image_friendfeed"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="top|center"
+                    android:layout_marginTop="1.0dip"
+                    android:src="@drawable/hot" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/layout_myfeed"
+                android:layout_width="fill_parent"
+                android:layout_height="48dp"
+                android:layout_weight="1" 
+                >
+
+                <ImageView
+                    android:id="@+id/image_myfeed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|center"
+                    android:layout_marginTop="1.0dip"
+                    android:src="@drawable/note" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" >
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/layout_home"
+                android:layout_width="fill_parent"
+                android:layout_height="48dp"
+                android:layout_weight="1" 
+                >
+
+                <ImageView
+                    android:id="@+id/image_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|center"
+                    android:layout_marginTop="1.0dip"
+                    android:src="@drawable/info" />
+
+             
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/layout_more"
+                android:layout_width="fill_parent"
+                android:layout_height="48dp"
+                android:layout_weight="1" 
+                >
+
+                <ImageView
+                    android:id="@+id/image_map"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|center"
+                    android:layout_marginTop="1.0dip"
+                    android:src="@drawable/map" />
+
+                
+            </FrameLayout>
+        </LinearLayout>
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/plus_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/frameLayout1"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/plus" />
+
+</RelativeLayout>

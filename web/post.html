@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css">
+    <script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+</head>
+<body>
+    <div data-role="page" id="home">
+		<div data-role="header">
+			<a href="home.php" data-ajax="false" data-role="button" data-icon="back">返回</a>
+			<h1>发表游记</h1>
+		</div>
+		<div data-role="content">
+			<form method="post" id="words">
+				<div data-role="fieldcontain">
+					<textarea name="addinfo" id="info" style="height:100px" placeholder="旅途中的点点滴滴……"></textarea>
+				</div>
+			</form>
+				<p>
+					<a href="#photo" data-rel="dialog"><button data-mini="true" data-inline="true">添加照片</button></a>
+					<a href="#audio" data-rel="dialog"><button data-mini="true" data-inline="true">添加声音</button></a>
+					<a href="#location" data-rel="dialog"><button data-mini="true" data-inline="true">添加位置信息</button></a>
+					<span id="locinfo"></span>
+				</p>
+				<p style="text-align:right"><button data-inline="true" type="submit" id="send" state="start">发布</button></p>
+		</div>
+	</div>
+	<div data-role="page" id="photo">
+		<div data-role="header">
+			<h1>照片</h1>
+		</div>
+		<div data-role="content">
+			<button data-inline="true" data-icon="plus">现在拍摄</button>
+			<h3>从本地上传<input type="file" id="up_photo" multiple="multiple"></h3>
+		</div>
+	</div>
+	<div data-role="page" id="audio">
+		<div data-role="header">
+			<h1>声音</h1>
+		</div>
+		<div data-role="content">
+			<button data-inline="true" data-icon="plus">立即录制</button>
+			<h3>从本地上传<input type="file" id="up_audio" multiple="multiple"></h3>
+		</div>
+	</div>
+	<div data-role="page" id="location">
+		<div data-role="header">
+			<h1>位置</h1>
+		</div>
+		<div data-role="content">
+			<p style="text-align:center"><button data-inline="true" data-icon="plus">自定义位置</button></p>
+			<a href="#home"><p style="text-align:center"><button data-inline="true" data-icon="gear" id="getloc">获取系统位置信息</button></p></a>
+		</div>
+	</div>
+	<script type="text/javascript" src="qiniu.uploader.js"></script>
+    <script type="text/javascript">
+    //“显示文件信息”按钮的click事件代码
+    var Bucket = "shaoziqi";Q.Histroy(false);Q.SignUrl("uptoken.php");Q.Bucket(Bucket);
+    var files_arr=[];
+    var files;
+    var words=$("#info").text();
+    var downkey;
+    $("#up_photo").change(function() {
+            $("#send").prop("disabled", false)
+            Q.Stop();
+            idx = 0;
+            files = document.getElementById("up_photo").files;
+            if (files && files.length) {
+                for (i = 0; i < files.length; i++) {
+                    files_arr.push(files[files.length - i - 1]);
+                }
+            }
+        });
+    $("#up_audio").change(function() {
+            $("#send").prop("disabled", false)
+            files_audio = [];
+            Q.Stop();
+            idx = 0;
+            files = document.getElementById("up_audio").files;
+            if (files && files.length) {
+                for (i = 0; i < files.length; i++) {
+                    files_arr.push(files[files.length - i - 1]);
+                }
+            }
+        });
+    $("#send").on("vclick", function() {
+                    var formData=$("#words").serialize();
+                    $.ajax(
+                    {
+                    	type:"POST",
+                    	url:"post.php",
+                    	data:formData,
+                    	cache:false
+                    });
+
+                    if (Q.IsUploading()) {
+                        //alert("正在上传")
+                        //return
+                    }
+
+                    if ($(this).attr("state") == "pause") {
+                        $(this).attr("state", "go-on");
+                        Q.Pause();
+                        return;
+                    }
+
+                    if ($(this).attr("state") == "go-on") {
+                        $(this).attr("state", "pause");
+                        Q.Resume();
+                        return;
+                    }
+                    
+                    var getKey = function(subkey) {
+                        function onSuccess(data)
+                        {
+                        	downkey=data;
+                        }
+                        $.ajax({
+                        	type:"POST",
+                        	url:"post.php",
+                        	async: false,
+                        	cache:false,
+                        	success:onSuccess
+                        });
+                        return downkey+"/"+subkey;
+                    }
+                    
+                    if ($(this).attr("state") == "start") {
+                        Q.addEvent("historyFound", function(his) {
+                            if (confirm("文件：" + his + ",未上传完成，是否继续？")) {
+                                Q.ResumeHistory();
+                            } else {
+                                Q.ClearHistory();
+                            }
+                        });
+                        //可以在此回调中添加提交至服务端的额外参数,用于生成上传token
+                        //putExtra会
+                        Q.addEvent("beforeUp", function() {
+                            extra = new Object();
+                            var key = getKey(Q.getFile().name);
+                            extra.key = key;
+                            console.log(JSON.stringify(extra));
+                            Q.SetPutExtra(JSON.stringify(extra));
+                        });
+                        //上传失败回调
+                        Q.addEvent("putFailure", function(msg) {
+                            idx++;
+                            up();
+                        });
+
+                        //上传进度回调
+                        // p:0~100
+                        Q.addEvent("progress", function(p, s) {
+                        });
+                        //上传完成回调
+                        //fsize:文件大小(MB)
+                        //res:上传返回结果，默认为{hash:<hash>,key:<key>}
+                        Q.addEvent("putFinished", function(fsize, res, taking) {
+							if(res.key.indexOf("jpg")>=0||res.key.indexOf("gif")>=0||res.key.indexOf("png")>=0){
+							$.post("post.php",{
+								photo:'http://' + Bucket + '.qiniudn.com/' + res.key
+							});
+						}
+							if(res.key.indexOf("mp3")>=0||res.key.indexOf("amr")>=0){
+							$.post("post.php",{
+								audio:'http://' + Bucket + '.qiniudn.com/' + res.key
+							});
+
+						}
+
+                            idx++;
+                            up();
+                        });
+
+                        var up = function() {
+                            console.log("up...")
+                            if (files_arr && files_arr.length) {
+                                $("#send").prop("disabled", true)
+                                var f = files_arr.pop();
+                                var key = getKey(f.name);
+                                $(this).attr("state", "pause");
+                                console.log("uploading file:", f.name, " key:", key);
+                                Q.Upload(f, key);
+                            } else {
+                                $("#send").prop("disabled", false);
+                                window.location.href="home.php";
+                            }
+                        }
+                        up();
+                        return;
+                    }
+                });
+</script>
+</body>
+</html>
