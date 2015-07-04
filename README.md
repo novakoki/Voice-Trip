@@ -1,6 +1,5 @@
 Voice-Trip
 ==========
-<<<<<<< HEAD
 ###This is an Android app designed for travellers.
 =======
 ##Introduction:
@@ -80,4 +79,3 @@ Voice-Trip
 <p>安卓端：</p>
 <p>设置欢迎界面</p>
 <p>Webview缓存处理</p>
->>>>>>> 44627a12444d6b225d3a1135c1e9fb8196b17248
