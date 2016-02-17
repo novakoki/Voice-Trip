@@ -24,7 +24,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class Login extends Activity {
-	
+
 	Handler handler;
 	TextView textView;
 	ProgressBar progressBar;
@@ -37,12 +37,12 @@ public class Login extends Activity {
 		progressBar=(ProgressBar)findViewById(R.id.progressBar1);
 		WebView web=(WebView) findViewById(R.id.webview1);
 		web.getSettings().setJavaScriptEnabled(true);
-		web.loadUrl("http://shaoziqi.my.phpcloud.com/android/login.html");
+		web.loadUrl("http://blog.shaoziqi.tk/voice-trip/login.html");
 		web.setWebViewClient(new myWebClient());
 		WebSettings webseting = web.getSettings();
-		webseting.setDomStorageEnabled(true);        	
+		webseting.setDomStorageEnabled(true);
 	    webseting.setAppCacheMaxSize(1024*1024*8);//…Ë÷√ª∫≥Â¥Û–°
-		String appCacheDir = this.getApplicationContext().getDir("cache", Context.MODE_PRIVATE).getPath();    
+		String appCacheDir = this.getApplicationContext().getDir("cache", Context.MODE_PRIVATE).getPath();
 	    webseting.setAppCachePath(appCacheDir);
 	    webseting.setAllowFileAccess(true);
 	    webseting.setAppCacheEnabled(true);
@@ -72,7 +72,7 @@ public class Login extends Activity {
 	}
 	public class myWebClient extends WebViewClient
 	{
-		
+
 		@Override
 	    public void onPageStarted(WebView view, String url, Bitmap favicon) {
 	        // TODO Auto-generated method stub
@@ -95,11 +95,11 @@ public class Login extends Activity {
 	    }
 	}
 	public WebChromeClient m_chromeClient = new WebChromeClient(){
-        //¿©≥‰ª∫¥Êµƒ»›¡ø  
+        //¿©≥‰ª∫¥Êµƒ»›¡ø
 	@Override
-	public void onReachedMaxAppCacheSize(long spaceNeeded,  
-	            long totalUsedQuota, WebStorage.QuotaUpdater quotaUpdater) {  
-		    quotaUpdater.updateQuota(spaceNeeded * 2);  
+	public void onReachedMaxAppCacheSize(long spaceNeeded,
+	            long totalUsedQuota, WebStorage.QuotaUpdater quotaUpdater) {
+		    quotaUpdater.updateQuota(spaceNeeded * 2);
 		}
 	public void onProgressChanged(WebView view, int progress) {
 	     // Activities and WebViews measure progress with different scales.
